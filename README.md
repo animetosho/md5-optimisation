@@ -231,16 +231,16 @@ Processors were locked to a particular frequency during testing. Readings have b
 Explanation of tests:
 
 * **OSSL**: the reading taken from OpenSSL’s MD5 speed test
-* **Standard**: base algorithm used for comparison, which should roughly equate with OpenSSL in speed. This is included as a control variable since the testing methodology between OpenSSL and this benchmark may differ
-* **GOpt**: the ‘Standard’ algorithm with the G function shortcut
-* **GHOpt**: the ‘GOpt’ algorithm with some `MOV` instructions removed in the H function
-* **NoLEA**: ‘Standard’ algorithm with `LEA` instructions replaced with 2 ADDs
-* **NoLEA+G**: combination of ‘NoLEA’ and ‘GOpt’
-* **NoLEA+GH**: combination of ‘NoLEA’ and ‘GHOpt’
-* **Cache4**: the 'Standard' algorithm, where four (out of 16) of the inputs are cached in registers
-* **Cache8**: above, but with eight inputs cached
-* **Cache8+G**: above combined with ‘GOpt’
-* **AVX512**: implementation using AVX512 instructions (this reading is excluded from chart as only the Skylake-X processor tested supports this; table further down below shows the measurement)
+* [**Standard**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L35): base algorithm used for comparison, which should roughly equate with OpenSSL in speed. This is included as a control variable since the testing methodology between OpenSSL and this benchmark may differ
+* [**GOpt**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L201): the ‘Standard’ algorithm with the G function shortcut
+* [**GHOpt**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L306): the ‘GOpt’ algorithm with some `MOV` instructions removed in the H function
+* [**NoLEA**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L413): ‘Standard’ algorithm with `LEA` instructions replaced with 2 ADDs
+* [**NoLEA+G**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L544): combination of ‘NoLEA’ and ‘GOpt’
+* [**NoLEA+GH**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L614): combination of ‘NoLEA’ and ‘GHOpt’
+* [**Cache4**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L705): the 'Standard' algorithm, where four (out of 16) of the inputs are cached in registers
+* [**Cache8**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L866): above, but with eight inputs cached
+* [**Cache8+G**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L1030): above combined with ‘GOpt’
+* [**AVX512**](https://github.com/animetosho/md5-optimisation/blob/e42661105e971c94d0397e5b41bcf0a58e5874d3/md5-x86-asm.h#L1144): implementation using AVX512 instructions (this reading is excluded from chart as only the Skylake-X processor tested supports this; table further down below shows the measurement)
 
 ![Benchmark graph](images/bench.png)
 
