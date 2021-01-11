@@ -218,6 +218,30 @@ If a partial caching approach is taken, it is best to separate the cached inputs
 #### ISA Extensions
 
 The [BMI1 extension](https://en.wikipedia.org/wiki/Bit_manipulation_instruction_set#BMI1_(Bit_Manipulation_Instruction_Set_1)) for x86 provides the [`ANDN` instruction](https://www.felixcloutier.com/x86/andn), which saves a `NOT` when computing the G function. The VEX encoding nature of the instruction can be used to save a `MOV` instruction as well.
+`ANDN` can also save a `MOV` in the I function, e.g.
+
+```assembly
+; I function: (~d | b) ^ c
+mov tmp, D  ; tmp = D
+not tmp     ; tmp = ~tmp
+or  tmp, B  ; tmp |= B
+xor tmp, C  ; tmp ^= C
+; alternative approach
+mov tmp, -1 ; tmp = -1
+xor tmp, D  ; tmp ^= D  (same as tmp = ~D)
+or  tmp, B  ; tmp |= B
+xor tmp, C  ; tmp ^= C
+
+; using ANDN
+; do this once, before any I round
+mov  ones, -1
+; ...then for each I round
+andn tmp, D, ones ; tmp = ~D & -1 = ~D
+or   tmp, B       ; tmp |= B
+xor  tmp, C       ; tmp ^= C
+```
+
+
 
 The [`EOR3` instruction](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/eor3-three-way-exclusive-or) in SVE2 or SHA3 NEON extensions enables the H function to be computed in a single instruction, but is only available for SIMD operations. The destructive nature of the [SVE2 version of this instruction](https://developer.arm.com/docs/ddi0602/a/a64-sve-instructions-alphabetic-order/eor3-bitwise-exclusive-or-of-three-vectors) may require an additional move, although this can be avoided with the [trick shown above](#h-function-re-use).
 
