@@ -151,15 +151,15 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		RF4(, 5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(, 9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(,13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=r"(tmp1), [TMP2]"=r"(tmp2),
+	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"=r"(A), [B]"=r"(B), [C]"=r"(C), [D]"=r"(D)
-	// the following aren't outputs, but fancy compilers incorrectly clobber them unless we do something special
-	, [IA]"+r"(state->A), [IB]"+r"(state->B), [IC]"+r"(state->C), [ID]"+r"(state->D)
+	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
 #else
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+ 	:
 #endif
-	: ASM_INPUTS
+	ASM_INPUTS
 	:);
 	
 	asm(
@@ -181,12 +181,12 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
+	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
-	, [TMP3]"=r"(tmp3)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	, [TMP3]"=&r"(tmp3)
 #else
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 #endif
 	: ASM_INPUTS
 	:);
@@ -255,15 +255,15 @@ static inline __attribute__((always_inline)) void md5_block_gopt(MD5_STATE<uint3
 		RF4(, 5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(, 9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(,13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=r"(tmp1), [TMP2]"=r"(tmp2),
+	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"=r"(A), [B]"=r"(B), [C]"=r"(C), [D]"=r"(D)
-	// the following aren't outputs, but fancy compilers incorrectly clobber them unless we do something special
-	, [IA]"+r"(state->A), [IB]"+r"(state->B), [IC]"+r"(state->C), [ID]"+r"(state->D)
+	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
 #else
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	:
 #endif
-	: ASM_INPUTS
+	ASM_INPUTS
 	:);
 	
 	asm(
@@ -285,12 +285,12 @@ static inline __attribute__((always_inline)) void md5_block_gopt(MD5_STATE<uint3
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
+	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
-	, [TMP3]"=r"(tmp3)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	, [TMP3]"=&r"(tmp3)
 #else
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 #endif
 	: ASM_INPUTS
 	:);
@@ -341,15 +341,15 @@ static inline __attribute__((always_inline)) void md5_block_ghopt(MD5_STATE<uint
 		RF4(, 5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(, 9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(,13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=r"(tmp1), [TMP2]"=r"(tmp2),
+	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"=r"(A), [B]"=r"(B), [C]"=r"(C), [D]"=r"(D)
-	// the following aren't outputs, but fancy compilers incorrectly clobber them unless we do something special
-	, [IA]"+r"(state->A), [IB]"+r"(state->B), [IC]"+r"(state->C), [ID]"+r"(state->D)
+	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
 #else
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	:
 #endif
-	: ASM_INPUTS
+	ASM_INPUTS
 	:);
 	
 	asm(
@@ -381,12 +381,12 @@ static inline __attribute__((always_inline)) void md5_block_ghopt(MD5_STATE<uint
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
+	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
-	, [TMP3]"=r"(tmp3)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	, [TMP3]"=&r"(tmp3)
 #else
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 #endif
 	: ASM_INPUTS
 	:);
@@ -505,8 +505,8 @@ static inline __attribute__((always_inline)) void md5_block_nolea(MD5_STATE<uint
 		RF4(,  5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(,  9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(, 13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=r"(tmp1), [TMP2]"=r"(tmp2),
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -529,8 +529,8 @@ static inline __attribute__((always_inline)) void md5_block_nolea(MD5_STATE<uint
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -574,8 +574,8 @@ static inline __attribute__((always_inline)) void md5_block_noleag(MD5_STATE<uin
 		RF4(,  5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(,  9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(, 13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=r"(tmp1), [TMP2]"=r"(tmp2),
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -598,8 +598,8 @@ static inline __attribute__((always_inline)) void md5_block_noleag(MD5_STATE<uin
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -640,8 +640,8 @@ static inline __attribute__((always_inline)) void md5_block_noleagh(MD5_STATE<ui
 		RF4(,  5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(,  9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(, 13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=r"(tmp1), [TMP2]"=r"(tmp2),
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -676,8 +676,8 @@ static inline __attribute__((always_inline)) void md5_block_noleagh(MD5_STATE<ui
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
-	  [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D)
+	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -764,15 +764,15 @@ static inline __attribute__((always_inline)) void md5_block_cache4(MD5_STATE<uin
 
 
 #define ASM_PARAMS(i0, i1, i2, i3, cn) \
-	[A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2), [TMP3]"+r"(tmp3), \
-	  [cache]"+r"(cache##cn) \
+	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2), [TMP3]"+&r"(tmp3), \
+	  [cache]"+&r"(cache##cn) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]) \
 	:
 	
 	
 #define ASM_PARAMS2(i0, i1, i2, i3, i4, r) \
-	[A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]r(tmp1), [TMP2]r(tmp2), [TMP3]"=r"(tmp3), \
-	  [cache]"+r"(cache##i0), [cacheN]"=r"(cache##i4) \
+	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]r(tmp1), [TMP2]r(tmp2), [TMP3]"=&r"(tmp3), \
+	  [cache]"+&r"(cache##i0), [cacheN]"=&r"(cache##i4) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
 #define RF4(k0, k1, k2, k3, lastStmt) \
@@ -806,17 +806,17 @@ static inline __attribute__((always_inline)) void md5_block_cache4(MD5_STATE<uin
 	asm(
 		"movl %k[D], %k[TMP1]\n"
 		RF4(-0x28955b88, -0x173848aa, 0x242070db, -0x3e423112, "movl %[input4], %k[cacheN]\n")
-	: ASM_PARAMS2(0, 1, 2, 3, 4, "=r"));
+	: ASM_PARAMS2(0, 1, 2, 3, 4, "=&r"));
 	asm(
 		RF4(-0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff, "movl %[input4], %k[cacheN]\n")
-	: ASM_PARAMS2(4, 5, 6, 7, 8, "+r"));
+	: ASM_PARAMS2(4, 5, 6, 7, 8, "+&r"));
 	asm(
 		RF4(0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842, "movl %[input4], %k[cacheN]\n")
-	: ASM_PARAMS2(8, 9, 10, 11, 12, "+r"));
+	: ASM_PARAMS2(8, 9, 10, 11, 12, "+&r"));
 	asm(
 		RF4(0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821, "movl %[input4], %k[TMP2]\n")
-	: [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
-	  [cache]"+r"(cache12)
+	: [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	  [cache]"+&r"(cache12)
 	: [input0]"m"(_in[12]), [input1]"m"(_in[13]), [input2]"m"(_in[14]), [input3]"m"(_in[15]), [input4]"m"(_in[1])
 	:);
 	
@@ -924,16 +924,16 @@ static inline __attribute__((always_inline)) void md5_block_cache8(MD5_STATE<uin
 	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
 
 #define ASM_PARAMS(i0, i1, i2, i3, i4) \
-	[A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2), \
-	  [cache0]"+r"(cache##i0), [cache2]"+r"(cache##i2) \
+	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2), \
+	  [cache0]"+&r"(cache##i0), [cache2]"+&r"(cache##i2) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
 	
 	
 #ifdef MD5_CACHE_LOADSHIFT
 #define ASM_PARAMS2(i0, i1, i2, i3, i4, r) \
-	[A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]r(tmp1), [TMP2]r(tmp2), \
-	  [cache0]"+r"(cache##i0), [cache2]"=r"(cache##i2), [cache4]"=r"(cache##i4) \
+	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]r(tmp1), [TMP2]r(tmp2), \
+	  [cache0]"+&r"(cache##i0), [cache2]"=&r"(cache##i2), [cache4]"=&r"(cache##i4) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
 #define RF4(k0, k1, k2, k3, lastStmt) \
@@ -943,8 +943,8 @@ static inline __attribute__((always_inline)) void md5_block_cache8(MD5_STATE<uin
 	ROUND_F(B, C, D, A, "cache2", lastStmt, k3, 22)
 #else
 #define ASM_PARAMS2(i0, i1, i2, i3, i4, r) \
-	[A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]r(tmp1), [TMP2]"+r"(tmp2), \
-	  [cache0]"=r"(cache##i0), [cache2]"=r"(cache##i2), [cache4]"=r"(cache##i4) \
+	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]r(tmp1), [TMP2]"+&r"(tmp2), \
+	  [cache0]"=&r"(cache##i0), [cache2]"=&r"(cache##i2), [cache4]"=&r"(cache##i4) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
 #define RF4(k0, k1, k2, k3, lastStmt) \
@@ -985,17 +985,17 @@ static inline __attribute__((always_inline)) void md5_block_cache8(MD5_STATE<uin
 	asm(
 		"movl %k[D], %k[TMP1]\n"
 		RF4(-0x28955b88, -0x173848aa, 0x242070db, -0x3e423112, MD5_F_LOAD)
-	: ASM_PARAMS2(1, 2, 3, 4, 5, "=r"));
+	: ASM_PARAMS2(1, 2, 3, 4, 5, "=&r"));
 	asm(
 		RF4(-0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff, MD5_F_LOAD)
-	: ASM_PARAMS2(5, 6, 7, 8, 9, "+r"));
+	: ASM_PARAMS2(5, 6, 7, 8, 9, "+&r"));
 	asm(
 		RF4(0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842, MD5_F_LOAD)
-	: ASM_PARAMS2(9, 10, 11, 12, 13, "+r"));
+	: ASM_PARAMS2(9, 10, 11, 12, 13, "+&r"));
 	asm(
 		RF4(0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821, "")
-	: [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
-	  [cache0]"+r"(cache13), [cache2]"=r"(cache15)
+	: [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	  [cache0]"+&r"(cache13), [cache2]"=&r"(cache15)
 	: [input0]"m"(_in[13]), [input1]"m"(_in[14]), [input2]"m"(_in[15])
 	:);
 	
@@ -1059,17 +1059,17 @@ static inline __attribute__((always_inline)) void md5_block_cache_gopt(MD5_STATE
 	asm(
 		"movl %k[D], %k[TMP1]\n"
 		RF4(-0x28955b88, -0x173848aa, 0x242070db, -0x3e423112, MD5_F_LOAD)
-	: ASM_PARAMS2(1, 2, 3, 4, 5, "=r"));
+	: ASM_PARAMS2(1, 2, 3, 4, 5, "=&r"));
 	asm(
 		RF4(-0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff, MD5_F_LOAD)
-	: ASM_PARAMS2(5, 6, 7, 8, 9, "+r"));
+	: ASM_PARAMS2(5, 6, 7, 8, 9, "+&r"));
 	asm(
 		RF4(0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842, MD5_F_LOAD)
-	: ASM_PARAMS2(9, 10, 11, 12, 13, "+r"));
+	: ASM_PARAMS2(9, 10, 11, 12, 13, "+&r"));
 	asm(
 		RF4(0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821, "")
-	: [A]"+r"(A), [B]"+r"(B), [C]"+r"(C), [D]"+r"(D), [TMP1]"+r"(tmp1), [TMP2]"+r"(tmp2),
-	  [cache0]"+r"(cache13), [cache2]"=r"(cache15)
+	: [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	  [cache0]"+&r"(cache13), [cache2]"=&r"(cache15)
 	: [input0]"m"(_in[13]), [input1]"m"(_in[14]), [input2]"m"(_in[15])
 	:);
 #undef MD5_F_LOAD
@@ -1151,7 +1151,7 @@ static inline __attribute__((always_inline)) void md5_block_avx512(MD5_STATE<__m
 	__m128i cache0, cache4, cache8, cache12;
 	__m128i inTmp0, inTmp4, inTmp8, inTmp12;
 	
-#define ASM_OUTPUTS [A]"+x"(A), [B]"+x"(B), [C]"+x"(C), [D]"+x"(D), [TMP1]"=x"(tmp1), [TMP2]"+x"(tmp2)
+#define ASM_OUTPUTS [A]"+&x"(A), [B]"+&x"(B), [C]"+&x"(C), [D]"+&x"(D), [TMP1]"=&x"(tmp1), [TMP2]"+&x"(tmp2)
 
 #define RF4(i) \
 	"vmovdqu %[input" STR(i) "], %[cache" STR(i) "]\n" \
@@ -1217,26 +1217,22 @@ static inline __attribute__((always_inline)) void md5_block_avx512(MD5_STATE<__m
 	"vprord $" STR(R) ", %[" STR(A) "], %[" STR(A) "]\n" \
 	"vpaddd %[" STR(B) "], %[" STR(A) "], %[" STR(A) "]\n"
 	
-	asm("":"=x"(A), "=x"(B), "=x"(C), "=x"(D)::); // make compiler think there's stuff in these variables
-	
 	asm(
 		"vmovdqa %[ID], %[TMP2]\n"
 		RF4_FIRST(0)
 		RF4(4)
 		RF4(8)
 		RF4(12)
-	: [A]"=x"(A), [B]"=x"(B), [C]"=x"(C), [D]"=x"(D), [TMP1]"=x"(tmp1), [TMP2]"=x"(tmp2),
-	  [cache0]"=x"(cache0), [cache4]"=x"(cache4), [cache8]"=x"(cache8), [cache12]"=x"(cache12), [itmp0]"=x"(inTmp0),
+	: [A]"=&x"(A), [B]"=&x"(B), [C]"=&x"(C), [D]"=&x"(D), [TMP1]"=&x"(tmp1), [TMP2]"=&x"(tmp2),
+	  [cache0]"=&x"(cache0), [cache4]"=&x"(cache4), [cache8]"=&x"(cache8), [cache12]"=&x"(cache12), [itmp0]"=&x"(inTmp0),
 	  // marked as output to prevent bad clobbering by compilers
-	  [IA]"+x"(state->A), [IB]"+x"(state->B), [IC]"+x"(state->C), [ID]"+x"(state->D)
+	  [IA]"+&x"(state->A), [IB]"+&x"(state->B), [IC]"+&x"(state->C), [ID]"+&x"(state->D)
 	: [input0]"m"(_in[0]), [input4]"m"(_in[1]), [input8]"m"(_in[2]), [input12]"m"(_in[3]),
 	  [k0]"m"(md5_constants[0]), [k4]"m"(md5_constants[4]), [k8]"m"(md5_constants[8]), [k12]"m"(md5_constants[12])
 	:);
 	
-	asm("" :"+x"(inTmp0), "+x"(tmp1), "+x"(cache0), "+x"(cache4), "+x"(cache8), "+x"(cache12)::); // keep compilers sane
-	
 #define ASM_PARAMS(n) \
-	ASM_OUTPUTS, [itmp0]"=x"(inTmp0), [itmp4]"=x"(inTmp4), [itmp8]"=x"(inTmp8), [itmp12]"=x"(inTmp12) \
+	ASM_OUTPUTS, [itmp0]"=&x"(inTmp0), [itmp4]"=&x"(inTmp4), [itmp8]"=&x"(inTmp8), [itmp12]"=&x"(inTmp12) \
 	: [k0]"m"(md5_constants[n]), [k1]"m"(md5_constants[n+4]), [k2]"m"(md5_constants[n+8]), [k3]"m"(md5_constants[n+12]), \
 	  [cache0]"x"(cache0), [cache4]"x"(cache4), [cache8]"x"(cache8), [cache12]"x"(cache12) \
 	:
@@ -1251,8 +1247,6 @@ static inline __attribute__((always_inline)) void md5_block_avx512(MD5_STATE<__m
 		RG4("%[itmp8]", "%[itmp12]", "%[itmp0]")
 		RG4("%[itmp12]", "%[itmp0]", "%[itmp4]")
 	: ASM_PARAMS(16));
-	
-	asm("" :"+x"(inTmp0), "+x"(inTmp4), "+x"(inTmp8), "+x"(inTmp12), "+x"(tmp1), "+x"(cache0), "+x"(cache4), "+x"(cache8), "+x"(cache12)::); // keep compilers sane
 	
 	asm(
 		"vpaddd %[k1], %[cache4], %[itmp4]\n"
@@ -1279,8 +1273,6 @@ static inline __attribute__((always_inline)) void md5_block_avx512(MD5_STATE<__m
 		"vmovdqa %[D], %[TMP2]\n"
 	: ASM_PARAMS(32));
 	
-	asm("" :"+x"(inTmp0), "+x"(inTmp4), "+x"(inTmp8), "+x"(inTmp12), "+x"(tmp1), "+x"(cache0), "+x"(cache4), "+x"(cache8), "+x"(cache12)::); // keep compilers sane
-	
 	asm(
 		"vpaddd %[k0], %[cache0], %[itmp0]\n"
 		"vpaddd %[k1], %[cache4], %[itmp4]\n"
@@ -1291,9 +1283,6 @@ static inline __attribute__((always_inline)) void md5_block_avx512(MD5_STATE<__m
 		RI4("%[itmp8]", "%[itmp12]", "%[itmp4]")
 		RI4("%[itmp4]", "%[itmp8]", "%[itmp0]") // contains an unnecessary move on final ROUND_X... oh well
 	: ASM_PARAMS(48));
-	
-	asm("" :"+x"(inTmp0), "+x"(inTmp4), "+x"(inTmp8), "+x"(inTmp12), "+x"(tmp1), "+x"(cache0), "+x"(cache4), "+x"(cache8), "+x"(cache12),
-	  "+x"(A), "+x"(B), "+x"(C), "+x"(D)::); // keep compilers sane
 	
 	state->A = _mm_add_epi32(A, state->A);
 	state->B = _mm_add_epi32(B, state->B);

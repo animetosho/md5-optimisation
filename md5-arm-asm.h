@@ -161,8 +161,8 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		ROUND_I(D, A, B, C, "%[i2]",  0xf235, 0xbd3a, 22)
 		ROUND_I(C, D, A, B, "%[i9]",  0xd2bb, 0x2ad7, 17)
 		ROUND_I_LAST(B, C, D, A, 0xd391, 0xeb86, 11)
-	: [A]"=r"(A), [B]"=r"(B), [C]"=r"(C), [D]"=r"(D),
-	  [TMP1]"=r"(tmp1), [TMP2]"=r"(tmp2), [TMP3]"=r"(tmp3)
+	: [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D),
+	  [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2), [TMP3]"=&r"(tmp3)
 	:
 		[i0]"m"(_in[0]), [i1]"m"(_in[1]), [i2]"m"(_in[2]), [i3]"m"(_in[3]), [i4]"m"(_in[4]), [i5]"m"(_in[5]), [i6]"m"(_in[6]), [i7]"m"(_in[7]), [i8]"m"(_in[8]), [i9]"m"(_in[9]), [i10]"m"(_in[10]), [i11]"m"(_in[11]), [i12]"m"(_in[12]), [i13]"m"(_in[13]), [i14]"m"(_in[14]), [i15]"m"(_in[15]),
 		[IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D)
