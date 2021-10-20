@@ -327,7 +327,7 @@ Alternatively, the [shift-right-accumulate (SRA) instruction](https://developer.
 #### SVE2: Unneeded XOR
 
 SVE2 doesn’t have a plain rotate instruction, but it does have a curious [XOR-and-rotate](https://developer.arm.com/docs/ddi0602/a/a64-sve-instructions-alphabetic-order/xar-bitwise-exclusive-or-and-rotate-right-by-immediate) (not EOR-and-rotate?) instruction. So if it performs reasonably well, just XOR with 0 and only exploit the rotate functionality.
-Note that the [NEON-SHA3 `XAR` instruction](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/xar-exclusive-or-and-rotate) performs a 64-bit rotate, so won’t work here, though it could for the following section.
+Note that the [NEON-SHA3 `XAR` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/XAR--Exclusive-OR-and-Rotate-?lang=en) performs a 64-bit rotate, so won’t work here, though it could for the following section.
 
 #### Two buffers on 128-bit SIMD: shuffle + 64-bit shift
 
@@ -359,7 +359,7 @@ pshufd a, a, 0b10100000 ; duplicate lanes 0/2 to lanes 1/3
 psrlq  a, 32-n    ; a >>= 32-n
 ```
 
-For NEON with SHA3 extensions, [`XAR`](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/xar-exclusive-or-and-rotate) may also be used instead of a shift - this avoids the need to shuffle lanes, unlike SSE, as the rotate keeps lanes 0 and 1 identical, as well as lanes 2 and 3.
+For NEON with SHA3 extensions, [`XAR`](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/XAR--Exclusive-OR-and-Rotate-?lang=en) may also be used instead of a shift - this avoids the need to shuffle lanes, unlike SSE, as the rotate keeps lanes 0 and 1 identical, as well as lanes 2 and 3.
 
 #### Multiply-add
 
