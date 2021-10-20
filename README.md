@@ -92,14 +92,14 @@ The I function is usually defined as
 
 The `b` input has to go through a OR, then XOR.
 
-If your ISA supports a bit-select instruction (e.g. [`BSL`](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/bsl-bitwise-select) on ARM/NEON or [`VPCMOV`](https://en.wikipedia.org/wiki/XOP_instruction_set#Vector_conditional_move) on x86/XOP), the dependency chain can be shorted by one operation.
+If your ISA supports a bit-select instruction (e.g. [`BSL`](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/BSL--Bitwise-Select-?lang=en) on ARM/NEON or [`VPCMOV`](https://en.wikipedia.org/wiki/XOP_instruction_set#Vector_conditional_move) on x86/XOP), the dependency chain can be shorted by one operation.
 On a bitwise level, the I function can be written as `b ? !c : (!c ^ d)` (where `?...:` equates to the `BSL` instruction on ARM) so that the `b` input only has to go through a bit-select.
 
 ![I optimised comparison](images/icmp.png)
 
 Unfortunately, neither x86 nor ARM have a non-SIMD bit-select instruction, so this generally doesn’t help on widely used platforms, but it may be useful for multi-buffer implementations.
 
-The [SVE2](https://developer.arm.com/tools-and-software/server-and-hpc/compile/arm-instruction-emulator/resources/tutorials/sve/sve-vs-sve2/introduction-to-sve2) instruction set has a [`NBSL` instruction](https://developer.arm.com/docs/ddi0602/g/a64-sve-instructions-alphabetic-order/nbsl-bitwise-inverted-select), which can be remove the need for the NOT operation. Unfortunately, due to the destructive nature of this instruction, a move is still required.
+The [SVE2](https://developer.arm.com/tools-and-software/server-and-hpc/compile/arm-instruction-emulator/resources/tutorials/sve/sve-vs-sve2/introduction-to-sve2) instruction set has a [`NBSL` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SVE-Instructions/NBSL--Bitwise-inverted-select-?lang=en), which can be remove the need for the NOT operation. Unfortunately, due to the destructive nature of this instruction, a move is still required.
 
 ### x86: AVX512 (VL extension)
 
@@ -243,7 +243,7 @@ xor  tmp, C       ; tmp ^= C
 
 
 
-The [`EOR3` instruction](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/eor3-three-way-exclusive-or) in SVE2 or SHA3 NEON extensions enables the H function to be computed in a single instruction, but is only available for SIMD operations. The destructive nature of the [SVE2 version of this instruction](https://developer.arm.com/docs/ddi0602/a/a64-sve-instructions-alphabetic-order/eor3-bitwise-exclusive-or-of-three-vectors) may require an additional move, although this can be avoided with the [trick shown above](#h-function-re-use).
+The [`EOR3` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/EOR3--Three-way-Exclusive-OR-?lang=en) in SVE2 or SHA3 NEON extensions enables the H function to be computed in a single instruction, but is only available for SIMD operations. The destructive nature of the [SVE2 version of this instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SVE-Instructions/EOR3--Bitwise-exclusive-OR-of-three-vectors-?lang=en) may require an additional move, although this can be avoided with the [trick shown above](#h-function-re-use).
 
 
 ## Benchmarks (Single Buffer)
@@ -312,21 +312,21 @@ A number of SIMD ISAs don’t have a rotate instruction. The classic way to emul
 
 #### Rotate by 16
 
-Four out of the 64 rounds involves a rotate by 16, which can be emulated via byte shuffling techniques. On ARM, the [`VREV32` instruction](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/rev32-vector-reverse-elements-in-32-bit-words-vector) using 16-bit words, or x86 using [`PSHUFLW/HW`](https://www.felixcloutier.com/x86/pshuflw) or [`PSHUFB`](https://www.felixcloutier.com/x86/pshufb).
+Four out of the 64 rounds involves a rotate by 16, which can be emulated via byte shuffling techniques. On ARM, the [`VREV32` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/REV32--vector---Reverse-elements-in-32-bit-words--vector--) using 16-bit words, or x86 using [`PSHUFLW/HW`](https://www.felixcloutier.com/x86/pshuflw) or [`PSHUFB`](https://www.felixcloutier.com/x86/pshufb).
 
 As this only affects 1/16th of the rounds, the overall benefit is quite small.
 
 #### NEON: Fancy shifts
 
-The NEON instruction set supports a [shift-and-insert instruction](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/sri-shift-right-and-insert-immediate), which combines a shift and OR operation.
+The NEON instruction set supports a [shift-and-insert instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/SRI--Shift-Right-and-Insert--immediate--), which combines a shift and OR operation.
 
-Alternatively, the [shift-right-accumulate (SRA) instruction](https://developer.arm.com/docs/ddi0602/g/simd-and-floating-point-instructions-alphabetic-order/usra-unsigned-shift-right-and-accumulate-immediate) may be more beneficial, as long as the accumulation is performed on the `b` value rather than the shifted `a` value. This is because the SRA instruction can be executed alongside the necessary shift-left instruction. Unfortunately, the destructive nature of the SRA instruction means an extra move is required to make it work that way. Also, SRA seems to have longer latencies than shift-insert on a number of Cortex CPUs, meaning that there may actually be a speed regression.
+Alternatively, the [shift-right-accumulate (SRA) instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/USRA--Unsigned-Shift-Right-and-Accumulate--immediate--) may be more beneficial, as long as the accumulation is performed on the `b` value rather than the shifted `a` value. This is because the SRA instruction can be executed alongside the necessary shift-left instruction. Unfortunately, the destructive nature of the SRA instruction means an extra move is required to make it work that way. Also, SRA seems to have longer latencies than shift-insert on a number of Cortex CPUs, meaning that there may actually be a speed regression.
 
 ![NEON rotate strategies](images/neon-rot.png)
 
 #### SVE2: Unneeded XOR
 
-SVE2 doesn’t have a plain rotate instruction, but it does have a curious [XOR-and-rotate](https://developer.arm.com/docs/ddi0602/a/a64-sve-instructions-alphabetic-order/xar-bitwise-exclusive-or-and-rotate-right-by-immediate) (not EOR-and-rotate?) instruction. So if it performs reasonably well, just XOR with 0 and only exploit the rotate functionality.
+SVE2 doesn’t have a plain rotate instruction, but it does have a curious [XOR-and-rotate](https://developer.arm.com/documentation/ddi0602/2021-09/SVE-Instructions/XAR--Bitwise-exclusive-OR-and-rotate-right-by-immediate-?lang=en) (not EOR-and-rotate?) instruction. So if it performs reasonably well, just XOR with 0 and only exploit the rotate functionality.
 Note that the [NEON-SHA3 `XAR` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SIMD-FP-Instructions/XAR--Exclusive-OR-and-Rotate-?lang=en) performs a 64-bit rotate, so won’t work here, though it could for the following section.
 
 #### Two buffers on 128-bit SIMD: shuffle + 64-bit shift
