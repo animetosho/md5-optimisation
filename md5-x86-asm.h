@@ -151,12 +151,12 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		RF4(, 5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(, 9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(,13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+	: [TMP1]"=&R"(tmp1), [TMP2]"=&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	  [A]"=&R"(A), [B]"=&R"(B), [C]"=&R"(C), [D]"=&R"(D)
 	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
  	:
 #endif
 	ASM_INPUTS
@@ -181,12 +181,12 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	: [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	, [TMP3]"=&r"(tmp3)
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 #endif
 	: ASM_INPUTS
 	:);
@@ -255,12 +255,12 @@ static inline __attribute__((always_inline)) void md5_block_gopt(MD5_STATE<uint3
 		RF4(, 5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(, 9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(,13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+	: [TMP1]"=&R"(tmp1), [TMP2]"=&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	  [A]"=&R"(A), [B]"=&R"(B), [C]"=&R"(C), [D]"=&R"(D)
 	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	:
 #endif
 	ASM_INPUTS
@@ -285,12 +285,12 @@ static inline __attribute__((always_inline)) void md5_block_gopt(MD5_STATE<uint3
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	: [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	, [TMP3]"=&r"(tmp3)
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 #endif
 	: ASM_INPUTS
 	:);
@@ -341,12 +341,12 @@ static inline __attribute__((always_inline)) void md5_block_ghopt(MD5_STATE<uint
 		RF4(, 5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(, 9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(,13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+	: [TMP1]"=&R"(tmp1), [TMP2]"=&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	  [A]"=&R"(A), [B]"=&R"(B), [C]"=&R"(C), [D]"=&R"(D)
 	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	:
 #endif
 	ASM_INPUTS
@@ -381,12 +381,12 @@ static inline __attribute__((always_inline)) void md5_block_ghopt(MD5_STATE<uint
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	: [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	, [TMP3]"=&r"(tmp3)
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 #endif
 	: ASM_INPUTS
 	:);
@@ -508,12 +508,12 @@ static inline __attribute__((always_inline)) void md5_block_ghbmi(MD5_STATE<uint
 		ROUND_F(, D, A, B, C, "%[input14]", -0x02678e6d, 12)
 		ROUND_F(, C, D, A, B, "%[input15]", -0x5986bc72, 17)
 		ROUND_F_LAST(B, C, D, A, "%[input1]", 0x49b40821, 22)
-	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+	: [TMP1]"=&R"(tmp1), [TMP2]"=&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	  [A]"=&R"(A), [B]"=&R"(B), [C]"=&R"(C), [D]"=&R"(D)
 	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	:
 #endif
 	ASM_INPUTS
@@ -558,12 +558,12 @@ static inline __attribute__((always_inline)) void md5_block_ghbmi(MD5_STATE<uint
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	: [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
 #ifdef PLATFORM_AMD64
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	, [TMP3]"=&r"(tmp3)
 #else
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 #endif
 	: ASM_INPUTS
 	:);
@@ -684,8 +684,8 @@ static inline __attribute__((always_inline)) void md5_block_nolea(MD5_STATE<uint
 		RF4(,  5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(,  9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(, 13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	: [TMP1]"=&R"(tmp1), [TMP2]"=&r"(tmp2),
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -708,8 +708,8 @@ static inline __attribute__((always_inline)) void md5_block_nolea(MD5_STATE<uint
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	: [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -753,8 +753,8 @@ static inline __attribute__((always_inline)) void md5_block_noleag(MD5_STATE<uin
 		RF4(,  5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(,  9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(, 13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	: [TMP1]"=&R"(tmp1), [TMP2]"=&r"(tmp2),
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -777,8 +777,8 @@ static inline __attribute__((always_inline)) void md5_block_noleag(MD5_STATE<uin
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	: [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -819,8 +819,8 @@ static inline __attribute__((always_inline)) void md5_block_noleagh(MD5_STATE<ui
 		RF4(,  5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
 		RF4(,  9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
 		RF4(, 13, 14, 15,  1,  0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821)
-	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	: [TMP1]"=&R"(tmp1), [TMP2]"=&r"(tmp2),
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -855,8 +855,8 @@ static inline __attribute__((always_inline)) void md5_block_noleagh(MD5_STATE<ui
 		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
 		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
 		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
-	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
-	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	: [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
+	  [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D)
 	: ASM_INPUTS
 	:);
 	
@@ -943,14 +943,14 @@ static inline __attribute__((always_inline)) void md5_block_cache4(MD5_STATE<uin
 
 
 #define ASM_PARAMS(i0, i1, i2, i3, cn) \
-	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2), [TMP3]"+&r"(tmp3), \
+	[A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2), [TMP3]"+&r"(tmp3), \
 	  [cache]"+&r"(cache##cn) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]) \
 	:
 	
 	
-#define ASM_PARAMS2(i0, i1, i2, i3, i4, r) \
-	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]r(tmp1), [TMP2]r(tmp2), [TMP3]"=&r"(tmp3), \
+#define ASM_PARAMS2(i0, i1, i2, i3, i4, r1, r2) \
+	[A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]r1(tmp1), [TMP2]r2(tmp2), [TMP3]"=&r"(tmp3), \
 	  [cache]"+&r"(cache##i0), [cacheN]"=&r"(cache##i4) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
@@ -985,16 +985,16 @@ static inline __attribute__((always_inline)) void md5_block_cache4(MD5_STATE<uin
 	asm(
 		"movl %k[D], %k[TMP1]\n"
 		RF4(-0x28955b88, -0x173848aa, 0x242070db, -0x3e423112, "movl %[input4], %k[cacheN]\n")
-	: ASM_PARAMS2(0, 1, 2, 3, 4, "=&r"));
+	: ASM_PARAMS2(0, 1, 2, 3, 4, "=&R", "=&r"));
 	asm(
 		RF4(-0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff, "movl %[input4], %k[cacheN]\n")
-	: ASM_PARAMS2(4, 5, 6, 7, 8, "+&r"));
+	: ASM_PARAMS2(4, 5, 6, 7, 8, "+&R", "+&r"));
 	asm(
 		RF4(0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842, "movl %[input4], %k[cacheN]\n")
-	: ASM_PARAMS2(8, 9, 10, 11, 12, "+&r"));
+	: ASM_PARAMS2(8, 9, 10, 11, 12, "+&R", "+&r"));
 	asm(
 		RF4(0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821, "movl %[input4], %k[TMP2]\n")
-	: [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	: [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
 	  [cache]"+&r"(cache12)
 	: [input0]"m"(_in[12]), [input1]"m"(_in[13]), [input2]"m"(_in[14]), [input3]"m"(_in[15]), [input4]"m"(_in[1])
 	:);
@@ -1103,15 +1103,15 @@ static inline __attribute__((always_inline)) void md5_block_cache8(MD5_STATE<uin
 	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
 
 #define ASM_PARAMS(i0, i1, i2, i3, i4) \
-	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2), \
+	[A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2), \
 	  [cache0]"+&r"(cache##i0), [cache2]"+&r"(cache##i2) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
 	
 	
 #ifdef MD5_CACHE_LOADSHIFT
-#define ASM_PARAMS2(i0, i1, i2, i3, i4, r) \
-	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]r(tmp1), [TMP2]r(tmp2), \
+#define ASM_PARAMS2(i0, i1, i2, i3, i4, r1, r2) \
+	[A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]r1(tmp1), [TMP2]r2(tmp2), \
 	  [cache0]"+&r"(cache##i0), [cache2]"=&r"(cache##i2), [cache4]"=&r"(cache##i4) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
@@ -1121,8 +1121,8 @@ static inline __attribute__((always_inline)) void md5_block_cache8(MD5_STATE<uin
 	ROUND_F(C, D, A, B, "cache2", "shr $32, %[cache2]\n", k2, 17) \
 	ROUND_F(B, C, D, A, "cache2", lastStmt, k3, 22)
 #else
-#define ASM_PARAMS2(i0, i1, i2, i3, i4, r) \
-	[A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]r(tmp1), [TMP2]"+&r"(tmp2), \
+#define ASM_PARAMS2(i0, i1, i2, i3, i4, r1, r2) \
+	[A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]r1(tmp1), [TMP2]"+&r"(tmp2), \
 	  [cache0]"=&r"(cache##i0), [cache2]"=&r"(cache##i2), [cache4]"=&r"(cache##i4) \
 	: [input0]"m"(_in[i0]), [input1]"m"(_in[i1]), [input2]"m"(_in[i2]), [input3]"m"(_in[i3]), [input4]"m"(_in[i4]) \
 	:
@@ -1164,16 +1164,16 @@ static inline __attribute__((always_inline)) void md5_block_cache8(MD5_STATE<uin
 	asm(
 		"movl %k[D], %k[TMP1]\n"
 		RF4(-0x28955b88, -0x173848aa, 0x242070db, -0x3e423112, MD5_F_LOAD)
-	: ASM_PARAMS2(1, 2, 3, 4, 5, "=&r"));
+	: ASM_PARAMS2(1, 2, 3, 4, 5, "=&R", "=&r"));
 	asm(
 		RF4(-0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff, MD5_F_LOAD)
-	: ASM_PARAMS2(5, 6, 7, 8, 9, "+&r"));
+	: ASM_PARAMS2(5, 6, 7, 8, 9, "+&R", "+&r"));
 	asm(
 		RF4(0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842, MD5_F_LOAD)
-	: ASM_PARAMS2(9, 10, 11, 12, 13, "+&r"));
+	: ASM_PARAMS2(9, 10, 11, 12, 13, "+&R", "+&r"));
 	asm(
 		RF4(0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821, "")
-	: [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	: [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
 	  [cache0]"+&r"(cache13), [cache2]"=&r"(cache15)
 	: [input0]"m"(_in[13]), [input1]"m"(_in[14]), [input2]"m"(_in[15])
 	:);
@@ -1238,16 +1238,16 @@ static inline __attribute__((always_inline)) void md5_block_cache_gopt(MD5_STATE
 	asm(
 		"movl %k[D], %k[TMP1]\n"
 		RF4(-0x28955b88, -0x173848aa, 0x242070db, -0x3e423112, MD5_F_LOAD)
-	: ASM_PARAMS2(1, 2, 3, 4, 5, "=&r"));
+	: ASM_PARAMS2(1, 2, 3, 4, 5, "=&R", "=&r"));
 	asm(
 		RF4(-0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff, MD5_F_LOAD)
-	: ASM_PARAMS2(5, 6, 7, 8, 9, "+&r"));
+	: ASM_PARAMS2(5, 6, 7, 8, 9, "+&R", "+&r"));
 	asm(
 		RF4(0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842, MD5_F_LOAD)
-	: ASM_PARAMS2(9, 10, 11, 12, 13, "+&r"));
+	: ASM_PARAMS2(9, 10, 11, 12, 13, "+&R", "+&r"));
 	asm(
 		RF4(0x6b901122, -0x02678e6d, -0x5986bc72, 0x49b40821, "")
-	: [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D), [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+	: [A]"+&R"(A), [B]"+&R"(B), [C]"+&R"(C), [D]"+&R"(D), [TMP1]"+&R"(tmp1), [TMP2]"+&r"(tmp2),
 	  [cache0]"+&r"(cache13), [cache2]"=&r"(cache15)
 	: [input0]"m"(_in[13]), [input1]"m"(_in[14]), [input2]"m"(_in[15])
 	:);
