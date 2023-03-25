@@ -398,6 +398,185 @@ static inline __attribute__((always_inline)) void md5_block_ghopt(MD5_STATE<uint
 }
 
 
+#ifdef __BMI__
+#undef ROUND_G
+
+static inline __attribute__((always_inline)) void md5_block_ghbmi(MD5_STATE<uint32_t>* __restrict__ state, const void* __restrict__ data) {
+	uint32_t A;
+	uint32_t B;
+	uint32_t C;
+	uint32_t D;
+	const uint32_t* _in = (const uint32_t*)data;
+	void *tmp1, *tmp2;
+	
+#ifndef PLATFORM_AMD64
+	A = state->A;
+	B = state->B;
+	C = state->C;
+	D = state->D;
+#endif
+	
+#ifdef PLATFORM_AMD64
+	void* tmp3;
+#define ROUND_G(A, B, C, D, NEXT_IN, K, R) \
+	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"movl " NEXT_IN ", %k[TMP2]\n" \
+	"movl %k[" STR(D) "], %k[TMP3]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"andl %k[" STR(B) "], %k[TMP3]\n" \
+	"addl %k[TMP3], %k[" STR(A) "]\n" \
+	"roll $" STR(R) ", %k[" STR(A) "]\n" \
+	"andnl %k[" STR(B) "], %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
+#define ROUND_G_LAST(A, B, C, D, NEXT_IN, K, R) \
+	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"movl " NEXT_IN ", %k[TMP2]\n" \
+	"movl %k[" STR(D) "], %k[TMP3]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"andl %k[" STR(B) "], %k[TMP3]\n" \
+	"addl %k[TMP3], %k[" STR(A) "]\n" \
+	"roll $" STR(R) ", %k[" STR(A) "]\n" \
+	"movl %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
+#else
+#define ROUND_G(A, B, C, D, NEXT_IN, K, R) \
+	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"movl " NEXT_IN ", %k[TMP2]\n" \
+	"movl %k[" STR(D) "], %k[TMP1]\n" \
+	"andl %k[" STR(B) "], %k[TMP1]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"roll $" STR(R) ", %k[" STR(A) "]\n" \
+	"andnl %k[" STR(B) "], %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
+#define ROUND_G_LAST(A, B, C, D, NEXT_IN, K, R) \
+	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"movl " NEXT_IN ", %k[TMP2]\n" \
+	"movl %k[" STR(D) "], %k[TMP1]\n" \
+	"andl %k[" STR(B) "], %k[TMP1]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"roll $" STR(R) ", %k[" STR(A) "]\n" \
+	"movl %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
+#endif
+#define ROUND_F_LAST(A, B, C, D, NEXT_IN, K, R) \
+	"xorl %k[" STR(C) "], %k[TMP1]\n" \
+	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"andl %k[" STR(B) "], %k[TMP1]\n" \
+	"movl " NEXT_IN ", %k[TMP2]\n" \
+	"xorl %k[" STR(D) "], %k[TMP1]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"roll $" STR(R) ", %k[" STR(A) "]\n" \
+	"andnl %k[" STR(B) "], %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
+
+#ifdef PLATFORM_AMD64
+#undef ROUND_I
+#undef ROUND_I_LAST
+#define ROUND_I(A, B, C, D, NEXT_IN, K, R) \
+	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"orl %k[" STR(B) "], %k[TMP1]\n" \
+	"movl " NEXT_IN ", %k[TMP2]\n" \
+	"xorl %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"roll $" STR(R) ", %k[" STR(A) "]\n" \
+	"andnl %k[TMP3], %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
+#define ROUND_I_LAST(A, B, C, D, K, R) \
+	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"orl %k[" STR(B) "], %k[TMP1]\n" \
+	"xorl %k[" STR(C) "], %k[TMP1]\n" \
+	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"roll $" STR(R) ", %k[" STR(A) "]\n" \
+	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
+#endif
+	
+	asm(
+		"movl %[input0], %k[TMP2]\n"
+#ifdef PLATFORM_AMD64
+		"movl %k[ID], %k[TMP1]\n"
+		RF4(I, 1,  2,  3,  4,  -0x28955b88, -0x173848aa, 0x242070db, -0x3e423112)
+#else
+		"movl %k[D], %k[TMP1]\n"
+		RF4(, 1,  2,  3,  4,  -0x28955b88, -0x173848aa, 0x242070db, -0x3e423112)
+#endif
+		RF4(, 5,  6,  7,  8,  -0x0a83f051, 0x4787c62a, -0x57cfb9ed, -0x02b96aff)
+		RF4(, 9, 10, 11, 12,  0x698098d8, -0x74bb0851, -0x0000a44f, -0x76a32842)
+		
+		ROUND_F(, A, B, C, D, "%[input13]", 0x6b901122, 7)
+		ROUND_F(, D, A, B, C, "%[input14]", -0x02678e6d, 12)
+		ROUND_F(, C, D, A, B, "%[input15]", -0x5986bc72, 17)
+		ROUND_F_LAST(B, C, D, A, "%[input1]", 0x49b40821, 22)
+	: [TMP1]"=&r"(tmp1), [TMP2]"=&r"(tmp2),
+#ifdef PLATFORM_AMD64
+	  [A]"=&r"(A), [B]"=&r"(B), [C]"=&r"(C), [D]"=&r"(D)
+	: [IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D),
+#else
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	:
+#endif
+	ASM_INPUTS
+	:);
+	
+	asm(
+		RG4( 6, 11,  0,  5,  -0x09e1da9e, -0x3fbf4cc0, 0x265e5a51, -0x16493856)
+		RG4(10, 15,  4,  9,  -0x29d0efa3, 0x02441453, -0x275e197f, -0x182c0438)
+		RG4(14,  3,  8, 13,  0x21e1cde6, -0x3cc8f82a, -0x0b2af279, 0x455a14ed)
+		ROUND_G(A, B, C, D, "%[input2]", -0x561c16fb, 5)
+		ROUND_G(D, A, B, C, "%[input7]", -0x03105c08, 9)
+		ROUND_G(C, D, A, B, "%[input12]", 0x676f02d9, 14)
+		ROUND_G_LAST(B, C, D, A, "%[input5]", -0x72d5b376, 20)
+		
+		"xorl %k[C], %k[TMP1]\n"
+		"leal -0x0005c6be(%k[A], %k[TMP2]), %k[A]\n"
+		"xorl %k[B], %k[TMP1]\n"
+		"movl %[input8], %k[TMP2]\n"
+		"addl %k[TMP1], %k[A]\n"
+		"roll $4, %k[A]\n"
+		"addl %k[B], %k[A]\n"
+		ROUND_H(D, A, B, C, "%[input11]", -0x788e097f, 11)
+		ROUND_H(C, D, A, B, "%[input14]", 0x6d9d6122, 16)
+		ROUND_H(B, C, D, A, "%[input1]", -0x021ac7f4, 23)
+		RH4( 4,  7, 10, 13,  -0x5b4115bc, 0x4bdecfa9, -0x0944b4a0, -0x41404390)
+		RH4( 0,  3,  6,  9,  0x289b7ec6, -0x155ed806, -0x2b10cf7b, 0x04881d05)
+#ifdef PLATFORM_AMD64
+		"movl $-1, %k[TMP3]\n"
+#endif
+		RH4(12, 15,  2,  0,  -0x262b2fc7, -0x1924661b, 0x1fa27cf8, -0x3b53a99b)
+		
+#ifdef PLATFORM_AMD64
+		"andnl %k[TMP3], %k[D], %k[TMP1]\n"
+#else
+		"movl %k[D], %k[TMP1]\n"
+#endif
+		RI4( 7, 14,  5, 12,  -0x0bd6ddbc, 0x432aff97, -0x546bdc59, -0x036c5fc7)
+		RI4( 3, 10,  1,  8,  0x655b59c3, -0x70f3336e, -0x00100b83, -0x7a7ba22f)
+		RI4(15,  6, 13,  4,  0x6fa87e4f, -0x01d31920, -0x5cfebcec, 0x4e0811a1)
+		
+		ROUND_I(A, B, C, D, "%[input11]", -0x08ac817e, 6)
+		ROUND_I(D, A, B, C, "%[input2]" , -0x42c50dcb, 10)
+		ROUND_I(C, D, A, B, "%[input9]" , 0x2ad7d2bb, 15)
+		ROUND_I_LAST(B, C, D, A, -0x14792c6f, 21)
+	: [TMP1]"+&r"(tmp1), [TMP2]"+&r"(tmp2),
+#ifdef PLATFORM_AMD64
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+	, [TMP3]"=&r"(tmp3)
+#else
+	  [A]"+&r"(A), [B]"+&r"(B), [C]"+&r"(C), [D]"+&r"(D)
+#endif
+	: ASM_INPUTS
+	:);
+	
+	state->A += A;
+	state->B += B;
+	state->C += C;
+	state->D += D;
+}
+#undef ROUND_F_LAST
+#undef ROUND_G_LAST
+#endif
+
 #undef ROUND_F
 #undef ROUND_G
 #undef ROUND_H

@@ -67,6 +67,10 @@ bool do_tests(const char* expected, const void* __restrict__ src, size_t len) {
 	if(memcmp(&hash, expected, 16)) return true;
 	md5<uint32_t, md5_block_ghopt>(&hash, src, len);
 	if(memcmp(&hash, expected, 16)) return true;
+#ifdef __BMI__
+	md5<uint32_t, md5_block_ghbmi>(&hash, src, len);
+	if(memcmp(&hash, expected, 16)) return true;
+#endif
 	md5<uint32_t, md5_block_nolea>(&hash, src, len);
 	if(memcmp(&hash, expected, 16)) return true;
 	md5<uint32_t, md5_block_noleag>(&hash, src, len);
@@ -161,7 +165,7 @@ static void run_bench(const char* label) {
 		while(rounds--) {
 			md5<HT, fn>(&hash, benchData, TEST_SIZE);
 		}
-		//asm(""::"m"(hash):); // force hash to be written
+		asm(""::"m"(hash):); // force hash to be written
 		double secs = t.elapsed();
 		if(secs < result) result = secs;
 	}
@@ -196,6 +200,9 @@ int main(void) {
 #ifdef PLATFORM_X86
 	run_bench<uint32_t, md5_block_gopt>("GOpt  : ");
 	run_bench<uint32_t, md5_block_ghopt>("GHOpt : ");
+#ifdef __BMI__
+	run_bench<uint32_t, md5_block_ghbmi>("GHBMI : ");
+#endif
 	run_bench<uint32_t, md5_block_nolea>("NoLEA : ");
 	run_bench<uint32_t, md5_block_noleag>("NoL-G : ");
 	run_bench<uint32_t, md5_block_noleagh>("NoL-GH: ");
