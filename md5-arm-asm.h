@@ -17,6 +17,12 @@
 #endif
 
 #ifdef PLATFORM_ARM
+#if __BYTE_ORDER__ != __ORDER_BIG_ENDIAN__
+# define REV(R)
+#else
+# define REV(R) "rev " REG(R) ", " REG(R) "\n"
+#endif
+
 template<typename HT>
 struct MD5_STATE {
 	HT A, B, C, D;
@@ -67,6 +73,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	"add " REG(A) ", " REG(A) ", " REG(TMP1) "\n" \
 	"eor " REG(TMP3) ", " REG(TMP3) ", " REG(D) "\n" \
 	"add " REG(A) ", " REG(A) ", " REG(TMP3) "\n" \
+	REV(TMP2) \
 	ROR_ADD(A, B, R)
 #define ROUND_H(A, B, C, D, NEXT_IN, KL, KH, R) \
 	SETI_L(TMP1, KL) \
@@ -77,6 +84,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	"eor " REG(TMP3) ", " REG(TMP3) ", " REG(B) "\n" \
 	"add " REG(A) ", " REG(A) ", " REG(TMP1) "\n" \
 	"add " REG(A) ", " REG(A) ", " REG(TMP3) "\n" \
+	REV(TMP2) \
 	ROR_ADD(A, B, R)
 #define ROUND_I(A, B, C, D, NEXT_IN, KL, KH, R) \
 	SETI_L(TMP1, KL) \
@@ -88,6 +96,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	"eor " REG(TMP3) ", " REG(TMP3) ", " REG(C) "\n" \
 	"add " REG(A) ", " REG(A) ", " REG(TMP1) "\n" \
 	"add " REG(A) ", " REG(A) ", " REG(TMP3) "\n" \
+	REV(TMP2) \
 	ROR_ADD(A, B, R)
 #define ROUND_I_LAST(A, B, C, D, KL, KH, R) \
 	SETI_L(TMP1, KL) \
@@ -110,6 +119,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	"and " REG(TMP1) ", " REG(B) ", " REG(D) "\n" \
 	"orr " REG(TMP3) ", " REG(TMP1) ", " REG(TMP3) "\n" \
 	"add " REG(A) ", " REG(A) ", " REG(TMP3) "\n" \
+	REV(TMP2) \
 	ROR_ADD(A, B, R)
 
 #define RF4(I, i0, i1, i2, i3, k0l, k0h, k1l, k1h, k2l, k2h, k3l, k3h) \
@@ -138,6 +148,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	
 	asm(
 		"ldr " REG(TMP2) ", %[i0]\n"
+		REV(TMP2)
 		RF4(I, 1,  2,  3,  4,  0xa478, 0xd76a, 0xb756, 0xe8c7, 0x70db, 0x2420, 0xceee, 0xc1bd)
 		RF4(, 5,  6,  7,  8,  0x0faf, 0xf57c, 0xc62a, 0x4787, 0x4613, 0xa830, 0x9501, 0xfd46)
 		RF4(, 9, 10, 11, 12,  0x98d8, 0x6980, 0xf7af, 0x8b44, 0x5bb1, 0xffff, 0xd7be, 0x895c)
