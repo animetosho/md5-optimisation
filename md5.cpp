@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "md5-x86-asm.h"
 #include "md5-arm-asm.h"
+#include "md5-arm64-asm.h"
 
 template<typename HT>
 void md5_init(MD5_STATE<HT>* state) {

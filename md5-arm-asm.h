@@ -16,7 +16,7 @@
 	#define PLATFORM_ARM 1
 #endif
 
-#ifdef PLATFORM_ARM
+#if defined(PLATFORM_ARM) && !defined(__aarch64__)
 #if __BYTE_ORDER__ != __ORDER_BIG_ENDIAN__
 # define REV(R)
 #else
