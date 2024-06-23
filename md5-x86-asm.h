@@ -475,19 +475,18 @@ static inline __attribute__((always_inline)) void md5_block_ghbmi(MD5_STATE<uint
 #undef ROUND_I
 #undef ROUND_I_LAST
 #define ROUND_I(A, B, C, D, NEXT_IN, K, R) \
-	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
-	"orl %k[" STR(B) "], %k[TMP1]\n" \
+	"leal " STR(K) "-1(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"andnl %k[" STR(D) "], %k[" STR(B) "], %k[TMP1]\n" \
 	"movl " NEXT_IN ", %k[TMP2]\n" \
 	"xorl %k[" STR(C) "], %k[TMP1]\n" \
-	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"subl %k[TMP1], %k[" STR(A) "]\n" \
 	"roll $" STR(R) ", %k[" STR(A) "]\n" \
-	"andnl %k[TMP3], %k[" STR(C) "], %k[TMP1]\n" \
 	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
 #define ROUND_I_LAST(A, B, C, D, K, R) \
-	"leal " STR(K) "(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
-	"orl %k[" STR(B) "], %k[TMP1]\n" \
+	"leal " STR(K) "-1(%k[" STR(A) "], %k[TMP2]), %k[" STR(A) "]\n" \
+	"andnl %k[" STR(D) "], %k[" STR(B) "], %k[TMP1]\n" \
 	"xorl %k[" STR(C) "], %k[TMP1]\n" \
-	"addl %k[TMP1], %k[" STR(A) "]\n" \
+	"subl %k[TMP1], %k[" STR(A) "]\n" \
 	"roll $" STR(R) ", %k[" STR(A) "]\n" \
 	"addl %k[" STR(B) "], %k[" STR(A) "]\n"
 #endif
@@ -540,16 +539,8 @@ static inline __attribute__((always_inline)) void md5_block_ghbmi(MD5_STATE<uint
 		ROUND_H(B, C, D, A, "%[input1]", -0x021ac7f4, 23)
 		RH4( 4,  7, 10, 13,  -0x5b4115bc, 0x4bdecfa9, -0x0944b4a0, -0x41404390)
 		RH4( 0,  3,  6,  9,  0x289b7ec6, -0x155ed806, -0x2b10cf7b, 0x04881d05)
-#ifdef PLATFORM_AMD64
-		"movl $-1, %k[TMP3]\n"
-#endif
 		RH4(12, 15,  2,  0,  -0x262b2fc7, -0x1924661b, 0x1fa27cf8, -0x3b53a99b)
 		
-#ifdef PLATFORM_AMD64
-		"andnl %k[TMP3], %k[D], %k[TMP1]\n"
-#else
-		"movl %k[D], %k[TMP1]\n"
-#endif
 		RI4( 7, 14,  5, 12,  -0x0bd6ddbc, 0x432aff97, -0x546bdc59, -0x036c5fc7)
 		RI4( 3, 10,  1,  8,  0x655b59c3, -0x70f3336e, -0x00100b83, -0x7a7ba22f)
 		RI4(15,  6, 13,  4,  0x6fa87e4f, -0x01d31920, -0x5cfebcec, 0x4e0811a1)

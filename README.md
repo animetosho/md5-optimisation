@@ -101,6 +101,8 @@ Unfortunately, neither x86 nor ARM have a non-SIMD bit-select instruction, so th
 
 The [SVE2](https://developer.arm.com/tools-and-software/server-and-hpc/compile/arm-instruction-emulator/resources/tutorials/sve/sve-vs-sve2/introduction-to-sve2) instruction set has a [`NBSL` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SVE-Instructions/NBSL--Bitwise-inverted-select-?lang=en), which can be remove the need for the NOT operation. Unfortunately, due to the destructive nature of this instruction, a move is still required, though this might be eliminated if the uArch supports `MOVPRFX` elimination (Cortex X3/A715/A520 or later).
 
+Note that the bitwise NOT can be eliminated via the identity `~x = -x - 1`. The ‘-1’ can be merged into the round key, whilst the result of the I function can be subtracted from A instead of added to A.
+
 ### x86: AVX512 (VL extension)
 
 Although SIMD doesn’t seem useful for (single buffer) MD5, AVX512 adds some useful instructions for the task, namely [rotate](https://www.felixcloutier.com/x86/vprold:vprolvd:vprolq:vprolvq) and [ternary-logic](https://en.wikipedia.org/wiki/AVX-512#Bitwise_ternary_logic). The latter instruction allows all of MD5’s mixing functions (F, G, H, I) to be [implemented in a single instruction](http://www.0x80.pl/articles/avx512-ternary-functions.html#md5-sha-1-and-sha-2-hashing-new), which is quite helpful in shortening the dependency chain as the `b` input only needs one operation before merging with `a`.
@@ -242,6 +244,25 @@ andn tmp, D, ones ; tmp = ~D & -1 = ~D
 or   tmp, B       ; tmp |= B
 xor  tmp, C       ; tmp ^= C
 ```
+
+@clausecker [points out](https://github.com/animetosho/md5-optimisation/discussions/9) the following:
+
+> `I(b, c, d) = c ^ (b | ~d) = ~(c ^ (~b & d)) = -1 - (c ^ (~b & d))`
+>
+> the -1 can be absorbed into the round key and instead of adding `I(b, c, d)` we subtract `c ^ (~b & d)`.
+
+This trick further saves an instruction:
+
+```assembly
+; -1 must already applied to A via the round key
+andn tmp, B, D  ; tmp = ~B & D
+xor  tmp, C     ; tmp ^= C
+sub  A, tmp     ; A -= tmp
+```
+
+This may also be useful for multi-buffer AVX implementations (note that the SSE `PANDN` instruction requires the B input to be moved, increasing its dependency chain which likely hurts performance).
+
+This trick can be used on ARM32 without Thumb2, where the `ORN` instruction is not available.
 
 
 

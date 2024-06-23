@@ -194,7 +194,8 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 #undef SETI_L
 #undef SETI_H
 #undef ROR_ADD
-#undef ORN
+#undef ORN1
+#undef ORN2
 #undef REG
 }
 
