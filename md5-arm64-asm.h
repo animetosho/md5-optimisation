@@ -99,7 +99,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	"add %w[" STR(A) "], %w[" STR(A) "], %w[" STR(B) "]\n"
 
 #define RF4(i0, i1, i2, i3, i4, i5, kr) \
-	asm( \
+	__asm__( \
 		ROUND_F(A, A, B, C, D, "%w[cache0]", "k0", "lsr %[k0], %[k0], #32", 25, "ldp %w[cache2], %w[cache3], %[in2]") \
 		ROUND_F(D, D, A, B, C, "%w[cache1]", "k0", "", 20, "") \
 		ROUND_F(C, C, D, A, B, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 15, "ldp %w[cache4], %w[cache5], %[in4]") \
@@ -110,7 +110,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	:);
 	
 #define RG4(i0, i1, i2, i3, kr) \
-	asm( \
+	__asm__( \
 		ROUND_G(A, B, C, D, "%w[cache0]", "k0", "lsr %[k0], %[k0], #32", 27) \
 		ROUND_G(D, A, B, C, "%w[cache1]", "k0", "", 23) \
 		ROUND_G(C, D, A, B, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 18) \
@@ -120,7 +120,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	:);
 	
 #define RH4(i0, i1, i2, i3, kr) \
-	asm( \
+	__asm__( \
 		ROUND_H(A, B, C, D, "%w[cache0]", "k0", "lsr %[k0], %[k0], #32", 28) \
 		ROUND_H(D, A, B, C, "%w[cache1]", "k0", "", 21) \
 		ROUND_H(C, D, A, B, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 16) \
@@ -130,7 +130,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	:);
 	
 #define RI4(i0, i1, i2, i3, kr) \
-	asm( \
+	__asm__( \
 		ROUND_I(A, B, C, D, "%w[cache0]", "k0", "lsr %[k0], %[k0], #32", 26) \
 		ROUND_I(D, A, B, C, "%w[cache1]", "k0", "", 22) \
 		ROUND_I(C, D, A, B, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 17) \
@@ -139,7 +139,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	: [kM]"r"(md5_constants_aarch64), [cache0]"r"(cache[i0]), [cache1]"r"(cache[i1]), [cache2]"r"(cache[i2]), [cache3]"r"(cache[i3]) \
 	:);
 	
-	asm(
+	__asm__(
 		"ldp %w[cache0], %w[cache1], %[i0]\n"
 		"ldp %[k0], %[k1], [%[kM]]\n"
 		ROUND_F(IA, A, IB, IC, ID, "%w[cache0]", "k0", "lsr %[k0], %[k0], #32", 25, "ldp %w[cache2], %w[cache3], %[i2]")
@@ -155,7 +155,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	RF4( 4,  5,  6,  7,  8,  9,   32)
 	RF4( 8,  9, 10, 11, 12, 13,   48)
 	
-	asm(
+	__asm__(
 		ROUND_F(A, A, B, C, D, "%w[cache0]", "k0", "lsr %[k0], %[k0], #32", 25, "ldp %w[cache2], %w[cache3], %[i14]")
 		ROUND_F(D, D, A, B, C, "%w[cache1]", "k0", "", 20, "")
 		ROUND_F(C, C, D, A, B, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 15, "")
@@ -180,7 +180,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 	RI4(  7, 14,  5,12,   208)
 	RI4(  3, 10,  1, 8,   224)
 	RI4( 15,  6, 13, 4,   240)
-	asm(
+	__asm__(
 		ROUND_I(A, B, C, D, "%w[cache0]", "k0", "lsr %[k0], %[k0], #32", 26)
 		ROUND_I(D, A, B, C, "%w[cache1]", "k0", "", 22)
 		ROUND_I(C, D, A, B, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 17)

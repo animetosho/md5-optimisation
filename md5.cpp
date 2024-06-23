@@ -166,7 +166,7 @@ static void run_bench(const char* label) {
 		while(rounds--) {
 			md5<HT, fn>(&hash, benchData, TEST_SIZE);
 		}
-		asm(""::"m"(hash):); // force hash to be written
+		__asm__(""::"m"(hash):); // force hash to be written
 		double secs = t.elapsed();
 		if(secs < result) result = secs;
 	}
