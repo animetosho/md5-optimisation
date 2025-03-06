@@ -99,7 +99,7 @@ On a bitwise level, the I function can be written as `b ? !c : (!c ^ d)` (where 
 
 Unfortunately, neither x86 nor ARM have a non-SIMD bit-select instruction, so this generally doesn’t help on widely used platforms, but it may be useful for multi-buffer implementations.
 
-The [SVE2](https://developer.arm.com/tools-and-software/server-and-hpc/compile/arm-instruction-emulator/resources/tutorials/sve/sve-vs-sve2/introduction-to-sve2) instruction set has a [`NBSL` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SVE-Instructions/NBSL--Bitwise-inverted-select-?lang=en), which can be remove the need for the NOT operation. Unfortunately, due to the destructive nature of this instruction, a move is still required, though this might be eliminated if the uArch supports `MOVPRFX` elimination (Cortex X3/A715/A520 or later).
+The [SVE2](https://developer.arm.com/tools-and-software/server-and-hpc/compile/arm-instruction-emulator/resources/tutorials/sve/sve-vs-sve2/introduction-to-sve2) instruction set has a [`NBSL` instruction](https://developer.arm.com/documentation/ddi0602/2021-09/SVE-Instructions/NBSL--Bitwise-inverted-select-?lang=en), which can eliminate the need for the NOT operation. Unfortunately, due to the destructive nature of this instruction, a move is still required, though this might be eliminated if the uArch supports `MOVPRFX` elimination (Cortex X3/A715/A520 or later).
 
 Note that the bitwise NOT can be eliminated via the identity `~x = -x - 1`. The ‘-1’ can be merged into the round key, whilst the result of the I function can be subtracted from A instead of added to A.
 
