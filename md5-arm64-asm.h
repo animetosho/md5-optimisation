@@ -105,7 +105,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		ROUND_F(C, C, D, A, B, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 15, "ldp %w[cache4], %w[cache5], %[in4]") \
 		ROUND_F(B, B, C, D, A, "%w[cache3]", "k1", "ldp %[k0], %[k1], [%[kM], #" STR(kr) "]", 10, "") \
 	: ASM_PARAMS("+&r"), [cache2]"=&r"(cache[i2]), [cache3]"=&r"(cache[i3]), [cache4]"=&r"(cache[i4]), [cache5]"=&r"(cache[i5]) \
-	: [in2]"Ump"(_in[i2]), [in4]"Ump"(_in[i4]), [kM]"r"(md5_constants_aarch64), \
+	: [in2]"Q"(_in[i2]), [in4]"Q"(_in[i4]), [kM]"r"(md5_constants_aarch64), \
 	  [cache0]"r"(cache[i0]), [cache1]"r"(cache[i1]) \
 	:);
 	
@@ -147,7 +147,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		ROUND_F(IC, C, D, A, IB, "%w[cache2]", "k1", "lsr %[k1], %[k1], #32", 15, "ldp %w[cache4], %w[cache5], %[i4]")
 		ROUND_F(IB, B, C, D, A, "%w[cache3]", "k1", "ldp %[k0], %[k1], [%[kM], #16]", 10, "")
 	: ASM_PARAMS("=&r"), [cache0]"=&r"(cache[0]), [cache1]"=&r"(cache[1]), [cache2]"=&r"(cache[2]), [cache3]"=&r"(cache[3]), [cache4]"=&r"(cache[4]), [cache5]"=&r"(cache[5])
-	: [i0]"Ump"(_in[0]), [i2]"Ump"(_in[2]), [i4]"Ump"(_in[4]),
+	: [i0]"Q"(_in[0]), [i2]"Q"(_in[2]), [i4]"Q"(_in[4]),
 		[kM]"r"(md5_constants_aarch64),
 		[IA]"r"(state->A), [IB]"r"(state->B), [IC]"r"(state->C), [ID]"r"(state->D)
 	:);
@@ -163,7 +163,7 @@ static inline __attribute__((always_inline)) void md5_block_std(MD5_STATE<uint32
 		
 		"add %w[A], %w[A], %w[cacheN]\n"
 	: ASM_PARAMS("+&r"), [cache2]"=&r"(cache[14]), [cache3]"=&r"(cache[15])
-	: [i14]"Ump"(_in[14]), [kM]"r"(md5_constants_aarch64),
+	: [i14]"Q"(_in[14]), [kM]"r"(md5_constants_aarch64),
 	  [cache0]"r"(cache[12]), [cache1]"r"(cache[13]), [cacheN]"r"(cache[1])
 	:);
 	
