@@ -388,3 +388,13 @@ For NEON with SHA3 extensions, [`XAR`](https://developer.arm.com/documentation/d
 
 Some ISAs provide an integer multiply-accumulate instruction, which can be equivalent to a left-shift + add instruction. Unfortunately, multiplication often has high latency, so usually isn’t worthwhile. If you do decide to go this route however, consider accumulating with the `b` input instead of the right-shifted `a` value, to shorten the dependency chain (see [NEON: Fancy shifts](#neon-fancy-shifts) above).
 
+## License
+
+This project is licensed under either of
+
+ * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or
+   http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license ([LICENSE-MIT](LICENSE-MIT) or
+   http://opensource.org/licenses/MIT)
+
+at your option.
